@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bot_name }}</title>
+</head>
+<body>
+    <h1>{{ bot_name }}</h1>
+    <div id="chat-box" style="width: 400px; height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+        <!-- Chat messages will be displayed here -->
+    </div>
+    <input type="text" id="user-input" placeholder="Ask your question..." style="width: 80%;">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('user-input').value;
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += "<p>User: " + input + "</p>";
+
+            const response = await fetch('/chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: input })
+            });
+
+            const data = await response.json();
+            chatBox.innerHTML += "<p>Bot: " + data.response + "</p>";
+            document.getElementById('user-input').value = '';
+        }
+    </script>
+</body>
+</html>
